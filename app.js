@@ -1,11 +1,11 @@
 'use strict';
 
 var _ = require('underscore'),
+  config = require('./config'),
   nodemailer = require('nodemailer'),
-  transporter = nodemailer.createTransport(),
+  transporter = nodemailer.createTransport(config.transport),
   argv = require('minimist')(process.argv.slice(2)),
-  fs = require('fs'),
-  config = require('./config');
+  fs = require('fs');
 
 var attempts = 5,
   matches = false;
@@ -18,7 +18,7 @@ do {
 if (matches) {
   var resultText = '';
   for (var i in matches) {
-    resultText += matches[i][0].name + ' -> ' + matches[i][1].name) + '\n';
+    resultText += matches[i][0].name + ' -> ' + matches[i][1].name + '\n';
   }
   if (argv.p) {
     console.log(resultText);
@@ -87,30 +87,30 @@ function createPairs(people)
  *
  * @return null
  */
-function emailPairs(pair) {
+function emailPairs(pair)
+{
   var replaceMatch = /\{\{([\w\.]+)\}\}/g;
+
+  var emailTemplate = function(match, keyword) {
+    var retVal = 'Error',
+      splits = keyword.split('.');
+
+    if (splits.length === 2) {
+      var user = (splits[0] === 'receiver') ? pair[1] : pair[0];
+      if (user.hasOwnProperty(splits[1])) {
+        retVal = '' + user[splits[1]];
+      }
+    }
+
+    return retVal;
+  };
+
   transporter.sendMail({
     from: config.from,
     to: pair[0].name + " <" + pair[0].email + ">",
     subject: config.subject,
-    text: config.body.text.replace(replaceMatch, function(match, p1) {
-      switch (p1) {
-        case 'receiver.name': return pair[1].name;
-        case 'receiver.email': return pair[1].email;
-        case 'sender.name': return pair[0].name;
-        case 'sender.email': return pair[0].email;
-        default: return 'Error';
-      }
-    }),
-    html: config.body.html.replace(replaceMatch, function(match, p1) {
-      switch (p1) {
-        case 'receiver.name': return pair[1].name;
-        case 'receiver.email': return pair[1].email;
-        case 'sender.name': return pair[0].name;
-        case 'sender.email': return pair[0].email;
-        default: return 'Error';
-      }
-    })
+    text: config.body.text.replace(replaceMatch, emailTemplate),
+    html: config.body.html.replace(replaceMatch, emailTemplate)
   }, function(error, info) {
     if (error) {
       console.log('Unable to send email to ' + pair[0].name);
