@@ -4,17 +4,18 @@ A quick node.js implementation of a random draw secret santa. This script will r
 
 ## Installation
 You will need node.js installed on your machine.
+
 1. Clone/Download the repository
 2. Run `npm install` to install requirements
 3. Copy *config.example.js* to *config.js* and fill it out:
-   * people: An array of objects that contain the person's name and email address
-   * from: The email address you which the email to be from
-   * subject: The subject of the email
-   * body: The text/html message to send.  This implements some simplistic templating by replacing user property vars wrapped in {{}}:
-      * giver: the giving user
-      * receiver: the receiving user
-      * Example: `{{giver.name}}` would be replace with the value of the giving user's
-   * transport: this can contain any [nodemailer](http://www.nodemailer.com/) transport settings you may need.  Leave `null` to use local SMTP.
+  * people: An array of objects that contain the person's name and email address
+  * from: The email address you which the email to be from
+  * subject: The subject of the email
+  * body: The text/html message to send.  This implements some simplistic templating by replacing user property vars wrapped in {{}}:
+    * giver: the giving user
+    * receiver: the receiving user
+    * Example: `{{giver.name}}` would be replace with the value of the giving user's
+  * transport: this can contain any [nodemailer](http://www.nodemailer.com/) transport settings you may need.  Leave `null` to use local SMTP.
 
 ## Usage
 To run the script, simply run `node .` or `node app.js`
