@@ -14,7 +14,7 @@ You will need node.js installed on your machine.
   * body: The text/html message to send.  This implements some simplistic templating by replacing user property vars wrapped in {{}}:
     * giver: the giving user
     * receiver: the receiving user
-    * Example: `{{giver.name}}` would be replace with the value of the giving user's
+    * Example: `{{giver.name}}` would be replace with the value of the giving user's name
   * transport: this can contain any [nodemailer](http://www.nodemailer.com/) transport settings you may need.  Leave `null` to use local SMTP.
 
 ## Usage
